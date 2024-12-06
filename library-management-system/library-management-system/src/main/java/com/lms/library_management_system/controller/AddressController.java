@@ -39,10 +39,18 @@ public class AddressController {
 	public ResponseEntity<ResponseStructure<Address>> updateAddress(@PathVariable int addressId,@RequestBody AddressDto addressDto){
 		return addressService.updateAddress(addressId, addressDto);
 	}
-	
+
 	@DeleteMapping("/{addressId}")
-	public ResponseEntity<ResponseStructure<Address>> deleteAddress(@PathVariable int addressId){
-		return addressService.deleteAddress(addressId);
+	public ResponseEntity<ResponseStructure<Address>> deleteAddress(@PathVariable int addressId) {
+		try {
+			return addressService.deleteAddress(addressId);
+		} catch (Exception e) {
+			ResponseStructure<Address> errorResponse = new ResponseStructure<>();
+			errorResponse.setMessage(e.getMessage());
+			errorResponse.setStatusCode(404);
+			errorResponse.setData(null);
+			return ResponseEntity.status(404).body(errorResponse);
+		}
 	}
 	
 	@GetMapping
